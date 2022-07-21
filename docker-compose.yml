@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:11.6-alpine
+    ports:
+    - "5432:5432"
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - custom-network
+    volumes:
+     # mounting volume on host for saving postgres data
+      - ./postgres-data/:/var/lib/postgresql/data
+
+  api:
+    depends_on:
+      - postgres
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: api
+    image: api:v1
+    ports:
+      - '8000:8000'
+    networks:
+      - custom-network
+    env_file:
+      - ./backend/.env
+    entrypoint: ["/bin/sh", "entrypoint.sh"]
+
+  web:
+    depends_on:
+      - api
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports: 
+      - "3000:3000" 
+    container_name: web
+    image: web:v1
+    restart: always 
+    env_file:
+      - ./frontend/.env
+    networks:
+      - custom-network
+    # mounting volume on host for saving the logs of the api
+    volumes:
+      - ./api-log/:/app/backend/log/error.log 
+            
+
+volumes:
+  postgres-data:
+  api-log:
+
+networks:
+  custom-network:
+    name: custom-network
+    driver: bridge

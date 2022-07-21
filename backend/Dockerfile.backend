@@ -1,0 +1,15 @@
+FROM node:16.15.0-alpine
+
+
+WORKDIR /app/backend
+
+COPY package.json .
+
+RUN npm i
+
+COPY . .
+
+EXPOSE 8000
+
+RUN ["chmod", "+x", "entrypoint.sh"]
+
