@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8sweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8sweb
+  template:
+    metadata:
+      labels:
+        app: k8sweb
+    spec:
+      containers:
+      - name: k8sweb
+        image: khanjanmarthak/kubernetesweb
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: LOGIN_API
+            value: http://192.168.49.2:32000/login
+
+              
+        ports:
+        - containerPort: 3000
+

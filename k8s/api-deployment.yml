@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8api
+  template:
+    metadata:
+      labels:
+        app: k8api
+    spec:
+      containers:
+      - name: k8api
+        image: khanjanmarthak/kubernetesapi
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        
+        env:                       
+        - name: NODE_ENV 
+          valueFrom:                
+            secretKeyRef:
+              name: k8secrets
+              key: NODE_ENV
+
+        - name: PORT
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: PORT
+
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: JWT_SECRET
+
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-variables
+              key: POSTGRES_HOST
+
+        - name: POSTGRES_DIALECT
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: POSTGRES_DIALECT
+
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: POSTGRES_DB
+
+        - name: POSTGRES_LOGGING
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: POSTGRES_LOGGING
+
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: POSTGRES_USER
+
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: k8secrets
+              key: POSTGRES_PASSWORD
+
+        ports:
+        - containerPort: 8000
