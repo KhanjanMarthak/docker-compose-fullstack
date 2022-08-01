@@ -13,3 +13,4 @@ EXPOSE 8000
 
 RUN ["chmod", "+x", "entrypoint.sh"]
 
+ENTRYPOINT ["/bin/sh", "entrypoint.sh" ]

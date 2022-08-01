@@ -10,4 +10,7 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "npm","run","start" ]
+
+RUN ["chmod", "+x", "entrypoint.sh"]
+
+ENTRYPOINT ["/bin/sh", "entrypoint.sh" ]
