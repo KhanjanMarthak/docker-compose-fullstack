@@ -46,6 +46,7 @@ services:
     restart: always 
     env_file:
       - ./frontend/.env
+    entrypoint: ["/bin/sh", "entrypoint.sh"]
     networks:
       - custom-network
     # mounting volume on host for saving the logs of the api
